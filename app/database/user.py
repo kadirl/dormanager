@@ -40,3 +40,13 @@ class UserCollection:
         result = cls.col.find_one({'_id': id})
 
         return User(**result)
+
+    @classmethod
+    def get_user_by_tg_id(cls, id: int | str):
+        if isinstance(id, int):
+            id = str(id)
+
+        result = cls.col.find_one({'tg_id': id})
+
+        if result:
+            return User(**result)

@@ -28,24 +28,22 @@ async def cmd_back(message: types.Message, state: FSMContext):
 async def cmd_start(message: types.Message, state: FSMContext, command: CommandObject = CommandObject()):
     await clear_history(state)
 
-    id = command.args
-    user = None
-
-    if bson.ObjectId.is_valid(id):
-        user = UserCollection.get_user_by_id(id)
+    id = message.from_user.id
+    print(id)
+    user = UserCollection.get_user_by_tg_id(id)
 
     if user is None:
         await append_history(cmd_start, state)
         await state.set_state(MainState.new_user)
         await message.answer(
             'Привет, я бот общежития nFactorial! 👋\nНе желаете представиться?',
-            reply_markup=main_menu.new_user
+            reply_markup=main_menu.get_new_user()
         )
     else:
         await state.set_state(MainState.registered_user)
         await message.answer(
             f'Привет, {user.name}! 👋\n Чего желаете?',
-            reply_markup=main_menu.registered_user
+            reply_markup=main_menu.get_registered_user()
         )
 
 
