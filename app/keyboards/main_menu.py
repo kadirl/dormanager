@@ -1,6 +1,17 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 from aiogram.utils.keyboard import ReplyKeyboardBuilder, InlineKeyboardMarkup, InlineKeyboardButton
 
+BUTTON_NAMES = [
+    '{NOTIFY}',
+    '{FEATURE 2}',
+    '{FEATURE 3}',
+    '{FEATURE 4}',
+    '{FEATURE 5}',
+    '{FEATURE 6}',
+    '{SETTINGS}'
+]
+
+
 def get_new_user():
     return ReplyKeyboardMarkup(
         resize_keyboard=True,
@@ -9,16 +20,12 @@ def get_new_user():
         ]
     )
 
+
 def get_registered_user():
     builder = ReplyKeyboardBuilder()
 
-    builder.button(text='{FEATURE 1}')
-    builder.button(text='{FEATURE 2}')
-    builder.button(text='{FEATURE 3}')
-    builder.button(text='{FEATURE 4}')
-    builder.button(text='{FEATURE 5}')
-    builder.button(text='{FEATURE 6}')
-    builder.button(text='{SETTINGS}')
+    for button in BUTTON_NAMES:
+        builder.button(text=button)
 
     builder.adjust(2)
 
