@@ -22,3 +22,24 @@ def reply_to_offer():
     builder.adjust(2)
 
     return builder.as_markup()
+
+
+def reply_to_counter_offer():
+    builder = InlineKeyboardBuilder()
+
+    builder.add(InlineKeyboardButton(
+        text="{ACCEPT}",
+        callback_data="accept")
+    )
+    builder.add(InlineKeyboardButton(
+        text="{DECLINE}",
+        callback_data="decline")
+    )
+    builder.add(InlineKeyboardButton(
+        text="{ANOTHER OFFER}",
+        callback_data="another_offer")
+    )
+
+    builder.adjust(2)
+
+    return builder.as_markup()

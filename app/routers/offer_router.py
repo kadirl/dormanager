@@ -29,16 +29,24 @@ async def send_offer(message: types.Message, state: FSMContext):
     for user in users:
         if user.tg_id == str(message.from_user.id):
             await message.answer('{OFFER SENT}')
-            continue
         await bot.send_message(chat_id=user.chat_id, text=text, reply_markup=offer_menu.reply_to_offer())
 
     # await clear_history(state)
 
 
 @router.callback_query(Text("counter_offer"))
-async def send_random_value(callback: types.CallbackQuery,  state: FSMContext):
+async def send_random_value(callback: types.CallbackQuery, state: FSMContext):
     await state.set_state(OfferState.counter_offer)
+    await callback.message.answer(text='{OFFER REQUEST}')
+
 
 @router.message(OfferState.counter_offer)
-async def send_counter_offer():
-    pass
+async def send_counter_offer(message: types.Message, state: FSMContext):
+    text = message.text
+    chat_id_of_offer_sender = 529158582
+    await bot.send_message(chat_id=chat_id_of_offer_sender, text=text, reply_markup=offer_menu.reply_to_counter_offer())
+
+@router.callback_query(Text("another_offer"))
+async def send_random_value(callback: types.CallbackQuery, state: FSMContext):
+    await state.set_state(OfferState.offer)
+    await callback.message.answer(text='{OFFER REQUEST}')
