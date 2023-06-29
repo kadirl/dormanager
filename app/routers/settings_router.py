@@ -15,7 +15,7 @@ router = Router()
 
 
 @router.message(MainState.registered_user, Command('settings'))
-@router.message(MainState.registered_user, F.text == 'Настройки')
+@router.message(MainState.registered_user, F.text == 'Настройки ⚙️')
 async def cmd_settings(message: types.Message, state: FSMContext, command: CommandObject = CommandObject()):
     user = UserCollection.get_user_by_tg_id(
         message.from_user.id,
