@@ -19,6 +19,7 @@ class UserNotifications(AppModel):
 
 
 class User(AppModel):
+    _id: ObjectId = ObjectId()
     tg_id: str
     chat_id: str
     name: str

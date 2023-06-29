@@ -7,39 +7,20 @@ def reply_to_offer():
     builder = InlineKeyboardBuilder()
 
     builder.add(InlineKeyboardButton(
-        text="{ACCEPT}",
+        text="Интересно",
         callback_data="accept")
     )
-    builder.add(InlineKeyboardButton(
-        text="{COUNTER OFFER}",
-        callback_data="counter_offer")
-    )
-    builder.add(InlineKeyboardButton(
-        text="{DECLINE}",
-        callback_data="decline")
-    )
-
-    builder.adjust(2)
 
     return builder.as_markup()
 
-
-def reply_to_counter_offer():
+def issuer_reply():
     builder = InlineKeyboardBuilder()
 
     builder.add(InlineKeyboardButton(
-        text="{ACCEPT}",
+        text="Интересно",
         callback_data="accept")
     )
-    builder.add(InlineKeyboardButton(
-        text="{DECLINE}",
-        callback_data="decline")
-    )
-    builder.add(InlineKeyboardButton(
-        text="{ANOTHER OFFER}",
-        callback_data="another_offer")
-    )
-
-    builder.adjust(2)
 
     return builder.as_markup()
+
+

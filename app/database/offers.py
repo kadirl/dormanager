@@ -13,6 +13,7 @@ from app.database import database
 
 
 class Offer(AppModel):
+    _id: ObjectId = ObjectId()
     issuer_id: ObjectId
     text: str | None = None
 

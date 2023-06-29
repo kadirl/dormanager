@@ -50,7 +50,7 @@ async def counter_offer(callback: types.CallbackQuery, state: FSMContext):
 
     await state.set_state(OfferState.counter_offer)
     await callback.message.answer(
-        text=f'{user.name} заинтересован  вам следующее по '
+        text=f'{user.name} заинтересован в вашем предложении:\n\n"{offer.text}"'
     )
 
 

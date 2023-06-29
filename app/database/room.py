@@ -19,6 +19,7 @@ class RoomRating(AppModel):
 
 
 class Room(AppModel):
+    _id: ObjectId = ObjectId()
     number: int
     rating: float = 5.0
     ratings: List[RoomRating | None] = []
