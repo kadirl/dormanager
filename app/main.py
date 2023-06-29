@@ -9,7 +9,8 @@ from app.routers import (
     registration_router,
     notify_router,
     offer_router,
-    settings_router
+    settings_router,
+    rating_router
 )
 
 logging.basicConfig(level=logging.INFO)
@@ -35,5 +36,6 @@ if __name__ == '__main__':
     dp.include_router(registration_router.router)
     dp.include_router(notify_router.router)
     dp.include_router(offer_router.router)
+    dp.include_router(rating_router.router)
     dp.include_router(settings_router.router)
     asyncio.get_event_loop().run_until_complete(main())

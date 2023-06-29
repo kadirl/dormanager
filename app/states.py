@@ -22,3 +22,9 @@ class NotificationState(StatesGroup):
 class OfferState(StatesGroup):
     offer = State()
     counter_offer = State()
+
+
+class RatingState(StatesGroup):
+    number = State()
+    rate = State()
+    text = State()
