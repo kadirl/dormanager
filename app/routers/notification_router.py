@@ -21,6 +21,7 @@ async def create_notification(message: types.Message, state: FSMContext):
 async def send_notification(message: types.Message, state: FSMContext):
     text = message.text
 
+
     users = UserCollection.get_regular_notification_allowed_users()
     for user in users:
         await bot.send_message(user.tg_id, text='text')
