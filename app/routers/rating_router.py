@@ -8,9 +8,9 @@ from aiogram.types import ReplyKeyboardRemove
 from app.states import MainState, RatingState
 from app.keyboards import main_menu
 from app.database.user import User, UserCollection
-from app.filters.registration import NameFilter, RoomFilter
+from app.database.room import RoomCollection, RoomRating, Room
+from app.filters.rating import RoomFilter, RateFilter
 from app.utils import pop_history, append_history, clear_history
-
 
 router = Router()
 
@@ -21,7 +21,7 @@ async def number_handler(message: types.Message, state: FSMContext):
     await state.set_state(RatingState.number)
 
 
-@router.message(RatingState.number)
+@router.message(RatingState.number, RoomFilter)
 async def name_handler(message: types.Message, state: FSMContext):
     number = int(message.text)
     await state.update_data(number=number)
@@ -30,13 +30,12 @@ async def name_handler(message: types.Message, state: FSMContext):
     await state.set_state(RatingState.rate)
 
 
-# @router.message(RegistrationState.name)
-# async def invalid_name(message: types.Message, state: FSMContext):
-#     await message.answer('{INVALID NAME}')
+@router.message(RatingState.number)
+async def invalid_name(message: types.Message, state: FSMContext):
+    await message.answer('Неправильный номер комнаты')
 
 
-
-@router.message(RatingState.rate)
+@router.message(RatingState.rate, RateFilter)
 async def rate_handler(message: types.Message, state: FSMContext):
     rate = int(message.text)
     await state.update_data(rate=rate)
@@ -45,15 +44,29 @@ async def rate_handler(message: types.Message, state: FSMContext):
     await state.set_state(RatingState.text)
 
 
+@router.message(RatingState.rate)
+async def invalid_name(message: types.Message, state: FSMContext):
+    await message.answer('Рейтинг должен быть от 1 до 5')
+
+
 @router.message(RatingState.text)
 async def text_handler(message: types.Message, state: FSMContext):
     text = message.text
     sender = UserCollection.get_user_by_tg_id(message.from_user.id)
+    data = (await state.get_data())
     await message.answer('Success')
+
+    if RoomCollection.get_room_by_number(data['number']) is None:
+        RoomCollection.create_room(
+            Room(
+                number=data['number'],
+            )
+        )
+        RoomCollection.add_room_rating(
+            data['number'],
+            data['rate']
+        )
+
     await state.set_state(MainState.registered_user)
     await clear_history(state)
     await message.answer('Чего вы желаете?', reply_markup=main_menu.get_registered_user())
-
-# @router.message(RegistrationState.room)
-# async def invalid_room_handler(message: types.Message, state: FSMContext):
-#     await message.answer('{INVALID ROOM}')
