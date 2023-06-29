@@ -4,28 +4,33 @@ from aiogram.filters import BaseFilter
 from aiogram.types import Message
 
 
-class FirstLastNameFilter(BaseFilter):
+class NameFilter(BaseFilter):
     async def __call__(self, message: Message) -> bool:
-        # Single word
+        # Two words
         # Cyrillic only
         # No numbers
         # No special symbols
 
         input_string = message.text
 
+        print(len(input_string.split()) == 2)
+        print(bool(re.match(r'^[а-яәіңғүұқөһА-ЯӘІҢҒҮҰҚӨҺёЁ\s]+$', input_string)))
+        print(not any(char.isdigit() for char in input_string))
+
         return (
-                len(input_string.split()) == 1 and
-                bool(re.match(r'^[а-яәіңғүұқөһА-ЯӘІҢҒҮҰҚӨҺёЁ]+$', input_string)) and
-                not any(char.isdigit() for char in input_string) and
-                input_string.isalpha()
+                len(input_string.split()) == 2 and
+                bool(re.match(r'^[а-яәіңғүұқөһА-ЯӘІҢҒҮҰҚӨҺёЁ\s]+$', input_string)) and
+                not any(char.isdigit() for char in input_string)
         )
 
 
-class EmailFilter(BaseFilter):
+class RoomFilter(BaseFilter):
     async def __call__(self, message: Message) -> bool:
-        # Regular expression pattern for email validation
+        # Integer [1, 999]
 
-        pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+        input_string = message.text
 
-        # Check if the email matches the pattern
-        return bool(re.match(pattern, message.text))
+        return (
+            input_string.isdigit()
+            and 1 <= int(input_string) <= 999
+        )

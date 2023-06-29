@@ -49,7 +49,7 @@ async def cmd_start(message: types.Message, state: FSMContext, command: CommandO
         )
 
 
-@router.message(MainState.new_user)
+@router.message(MainState.new_user, F.text != 'Давай!')
 async def unknown_handler(message: types.Message):
     await message.answer(
         '{UNKNOWN HANDLER}'
