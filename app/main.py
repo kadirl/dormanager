@@ -7,8 +7,9 @@ from app import bot, dp
 from app.routers import (
     main_router,
     registration_router,
-    notification_router,
-    offer_router
+    notify_router,
+    offer_router,
+    settings_router
 )
 
 logging.basicConfig(level=logging.INFO)
@@ -32,6 +33,7 @@ if __name__ == '__main__':
     dp.shutdown.register(stop_bot)
     dp.include_router(main_router.router)
     dp.include_router(registration_router.router)
-    dp.include_router(notification_router.router)
+    dp.include_router(notify_router.router)
     dp.include_router(offer_router.router)
+    dp.include_router(settings_router.router)
     asyncio.get_event_loop().run_until_complete(main())

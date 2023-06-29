@@ -2,8 +2,8 @@ from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 from aiogram.utils.keyboard import ReplyKeyboardBuilder, InlineKeyboardMarkup, InlineKeyboardButton
 
 BUTTON_NAMES = [
-    '{NOTIFY}',
-    '{FEATURE 2}',
+    'Создать объявление',
+    'Настройки',
     '{FEATURE 3}',
     '{FEATURE 4}',
     '{FEATURE 5}',
