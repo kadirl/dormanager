@@ -14,6 +14,7 @@ from app.utils import pop_history, append_history, clear_history
 
 router = Router()
 
+
 @router.message(Command('rate'))
 async def number_handler(message: types.Message, state: FSMContext):
     await message.answer('Enter room number')
