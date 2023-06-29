@@ -4,7 +4,12 @@ import logging
 from aiogram import Bot
 
 from app import bot, dp
-from app.routers import main_router, registration_router, notification_router
+from app.routers import (
+    main_router,
+    registration_router,
+    notification_router,
+    offer_router
+)
 
 logging.basicConfig(level=logging.INFO)
 
@@ -28,4 +33,5 @@ if __name__ == '__main__':
     dp.include_router(main_router.router)
     dp.include_router(registration_router.router)
     dp.include_router(notification_router.router)
+    dp.include_router(offer_router.router)
     asyncio.get_event_loop().run_until_complete(main())

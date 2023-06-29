@@ -27,7 +27,8 @@ async def send_notification(message: types.Message, state: FSMContext):
 
     for user in users:
         if user.tg_id == str(message.from_user.id):
-            await bot.send_message('{NOTIFICATION SENT}')
+            await message.answer('{NOTIFICATION SENT}')
+            continue
         await bot.send_message(user.chat_id, text=text)
 
     await state.set_state(MainState.registered_user)
