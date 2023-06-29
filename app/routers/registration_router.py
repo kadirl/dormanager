@@ -43,6 +43,8 @@ async def room_handler(message: types.Message, state: FSMContext):
     await clear_history(state)
 
     await state.update_data(tg_id=message.from_user.id)
+    await state.update_data(chat_id=message.chat.id)
+
 
     UserCollection.create_user(
         User(

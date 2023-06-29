@@ -54,19 +54,19 @@ async def unknown_handler(message: types.Message):
     )
 
 
-@router.message(MainState.registered_user)
-async def registered_user(message: types.Message, state: FSMContext):
-    await clear_history(state)
-    await message.answer(
-        '{REGISTERED USER}',
-        reply_markup=ReplyKeyboardRemove()
-    )
+# @router.message(MainState.registered_user)
+# async def registered_user(message: types.Message, state: FSMContext):
+#     await clear_history(state)
+#     await message.answer(
+#         '{REGISTERED USER}',
+#         reply_markup=ReplyKeyboardRemove()
+#     )
 
 
-@router.message(MainState.registered_user)
-async def registered_user(message: types.Message, state: FSMContext):
-    await clear_history(state)
-    await message.answer(
-        '{REGISTERED USER}',
-        reply_markup=ReplyKeyboardRemove()
-    )
+# @router.message(MainState.registered_user)
+# async def registered_user(message: types.Message, state: FSMContext):
+#     await clear_history(state)
+#     await message.answer(
+#         '{REGISTERED USER}',
+#         reply_markup=ReplyKeyboardRemove()
+#     )

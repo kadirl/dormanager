@@ -20,6 +20,7 @@ class UserNotifications(AppModel):
 
 class User(AppModel):
     tg_id: str
+    chat_id: str
     name: str
     room: int
     notification_settings: UserNotifications = UserNotifications()
