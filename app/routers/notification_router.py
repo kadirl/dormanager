@@ -20,10 +20,10 @@ async def create_notification(message: types.Message, state: FSMContext):
 @router.message(NotificationState.content)
 async def send_notification(message: types.Message, state: FSMContext):
     text = message.text
-    # get_users_list_with_notifications_on
-    users = []
+
+    users = UserCollection.get_regular_notification_allowed_users()
     for user in users:
-        await bot.send_message(chat_id=message.chat.id, text='text')
+        await bot.send_message(user.tg_id, text='text')
 
     await clear_history(state)
 
