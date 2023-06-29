@@ -10,3 +10,7 @@ class MainState(StatesGroup):
 class RegistrationState(StatesGroup):
     name = State()
     room = State()
+
+
+class NotificationState(StatesGroup):
+    content = State()
