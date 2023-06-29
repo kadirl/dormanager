@@ -57,6 +57,8 @@ async def unknown_handler(message: types.Message):
 @router.message(MainState.registered_user, ~F.text.in_(main_menu.BUTTON_NAMES))
 async def registered_user(message: types.Message, state: FSMContext):
     await clear_history(state)
+    await append_history(registered_user, state)
+
     await message.answer(
         '{REGISTERED USER}',
         reply_markup=main_menu.get_registered_user()

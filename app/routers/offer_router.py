@@ -15,6 +15,7 @@ router = Router()
 
 
 @router.message(Command('offer'))
+@router.message(MainState.registered_user, F.text == '{OFFER}')
 async def create_offer(message: types.Message, state: FSMContext):
     await state.set_state(OfferState.offer)
     await message.answer(text='{OFFER REQUEST}')

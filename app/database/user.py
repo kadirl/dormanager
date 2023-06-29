@@ -82,3 +82,12 @@ class UserCollection:
         result = cls.col.find({'notification_settings.offers': True})
 
         return [User(**data) for data in result]
+
+    @classmethod
+    def update_notification_settings_by_tg_id(cls, tg_id: str, settings: UserNotifications):
+        cls.col.update_one(
+            {'tg_id': tg_id},
+            {'$set':{
+                'notification_settings': settings.dict()
+            }}
+        )

@@ -11,6 +11,9 @@ class RegistrationState(StatesGroup):
     name = State()
     room = State()
 
+class SettingsState(StatesGroup):
+    settings = State()
+
 
 class NotificationState(StatesGroup):
     content = State()
