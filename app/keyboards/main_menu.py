@@ -2,13 +2,13 @@ from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 from aiogram.utils.keyboard import ReplyKeyboardBuilder, InlineKeyboardMarkup, InlineKeyboardButton
 
 BUTTON_NAMES = [
-    'Создать объявление 📣',
+    'Создать объявление 📣', ### DONE
     'Объявить ивент 🎉',
     'Предложить обмен 🍽️',
     'Оценить соседей 👍👎',
     'Очередь в прачечной 🧺',
     'Частые вопросы 🙋',
-    'Настройки ⚙️'
+    'Настройки ⚙️' ### DONE
 ]
 
 
