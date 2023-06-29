@@ -20,6 +20,7 @@ async def create_notification(message: types.Message, state: FSMContext):
     await message.answer('{NOTIFICATION REQUEST}')
 
 
+
 @router.message(NotificationState.content)
 async def send_notification(message: types.Message, state: FSMContext):
     text = message.text
