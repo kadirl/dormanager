@@ -18,7 +18,7 @@ def get_registered_user():
     builder.button(text='{FEATURE 4}')
     builder.button(text='{FEATURE 5}')
     builder.button(text='{FEATURE 6}')
-    builder.button(text='{FEATURE 7}')
+    builder.button(text='{SETTINGS}')
 
     builder.adjust(2)
 

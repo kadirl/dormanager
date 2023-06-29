@@ -6,7 +6,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import ReplyKeyboardRemove
 
 from app.states import MainState, RegistrationState
-from app.keyboards import registration, main_menu
+from app.keyboards import main_menu
 from app.database.user import User, UserCollection
 from app.filters.registration import NameFilter, RoomFilter
 from app.utils import pop_history, append_history, clear_history

@@ -12,10 +12,17 @@ from app.utils import AppModel
 from app.database import database
 
 
+class UserNotifications(AppModel):
+    events: bool = True
+    offers: bool = True
+    regular: bool = True
+
+
 class User(AppModel):
     tg_id: str
     name: str
     room: int
+    notification_settings: UserNotifications = UserNotifications()
     registered_at: datetime | None = datetime.now()
 
 
@@ -50,3 +57,9 @@ class UserCollection:
 
         if result:
             return User(**result)
+
+    @classmethod
+    def get_all_users(cls):
+        result = cls.col.find()
+
+        return [User(**data) for data in result]

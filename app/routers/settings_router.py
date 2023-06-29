@@ -12,21 +12,10 @@ from app.utils import clear_history, append_history, pop_history
 router = Router()
 
 
-@router.message(Command('back'))
-async def cmd_back(message: types.Message, state: FSMContext):
-    if (
-        await state.get_state() is not None
-        and (await state.get_data())['state_history']
-    ):
-        prev_state, handler = await pop_history(state)
-        await state.set_state(prev_state)
-        await message.answer('{GOING BACK}')
-        await handler(message, state)
-
-
-@router.message(Command('start'))
+@router.message(MainState.registered_user, Command('settings'))
+@router.message(MainState.registered_user, F.text == '{SETTINGS}')
 async def cmd_start(message: types.Message, state: FSMContext, command: CommandObject = CommandObject()):
-    await clear_history(state)
+    await append_history(state)
 
     id = message.from_user.id
     print(id)
