@@ -12,3 +12,5 @@ uri = 'mongodb+srv://' + username + ':' + password + '@' + cluster + '/?retryWri
 
 # Create a new client and connect to the server
 client = MongoClient(uri, server_api=ServerApi('1'))
+database = client.get_database('dormanager')
+
