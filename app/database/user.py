@@ -63,3 +63,21 @@ class UserCollection:
         result = cls.col.find()
 
         return [User(**data) for data in result]
+
+    @classmethod
+    def get_regular_notification_allowed_users(cls):
+        result = cls.col.find({'notification_settings.regular': True})
+
+        return [User(**data) for data in result]
+
+    @classmethod
+    def get_events_notification_allowed_users(cls):
+        result = cls.col.find({'notification_settings.events': True})
+
+        return [User(**data) for data in result]
+
+    @classmethod
+    def get_offers_notification_allowed_users(cls):
+        result = cls.col.find({'notification_settings.offers': True})
+
+        return [User(**data) for data in result]
