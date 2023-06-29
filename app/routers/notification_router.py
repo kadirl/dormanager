@@ -14,6 +14,7 @@ router = Router()
 
 
 @router.message(Command('notify'))
+@router.message(MainState.registered_user, F.text == '{NOTIFY}')
 async def create_notification(message: types.Message, state: FSMContext):
     await state.set_state(NotificationState.content)
     await message.answer('{NOTIFICATION REQUEST}')

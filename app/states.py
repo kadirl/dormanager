@@ -14,3 +14,8 @@ class RegistrationState(StatesGroup):
 
 class NotificationState(StatesGroup):
     content = State()
+
+
+class OfferState(StatesGroup):
+    offer = State()
+    counter_offer = State()
