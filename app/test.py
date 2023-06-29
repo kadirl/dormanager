@@ -1,27 +1,12 @@
-from database import database
-from database.countries import CountryCollection, Country, City
+from database.user import User, UserCollection
 
 
-# country = Country(
-#     name='Kazakhstan',
-#     cities=[
-#         City(
-#             name='Shymkent',
-#             telegram_chat_id='-1001887851233'
-#         )
-#     ]
-# )
-#
-# id = CountryCollection.create_country(country)
-# print(id)
-#
-# cities = CountryCollection.get_cities_by_country('kazakhstan')
-# print(cities)
+id = UserCollection.create_user(User(
+    tg_id='testtest',
+    name='Кадир Кадир',
+    room=33
+))
 
-for i in range(5):
-    result = CountryCollection.insert_city('kazakhstan', City(
-        name='new shymkent '+str(i),
-        telegram_chat_id='-1001887851233'
-    ))
+print(id)
 
-    print(i, result)
+print(UserCollection.get_user_by_id(id))

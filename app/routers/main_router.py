@@ -38,7 +38,7 @@ async def cmd_start(message: types.Message, state: FSMContext, command: CommandO
         await append_history(cmd_start, state)
         await state.set_state(MainState.new_user)
         await message.answer(
-            'Привет, я бот волонтерского эко-клуба New Wave 👋\nНе хочешь к нам вступить?',
+            'Привет, я бот общежития nFactorial! 👋\nНе желаете представиться?',
             reply_markup=main_menu.new_user
         )
     else:
