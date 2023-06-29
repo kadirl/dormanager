@@ -35,7 +35,7 @@ async def send_offer(message: types.Message, state: FSMContext):
 
 
 @router.callback_query(Text("counter_offer"))
-async def send_random_value(callback: types.CallbackQuery):
+async def send_random_value(callback: types.CallbackQuery,  state: FSMContext):
     await state.set_state(OfferState.counter_offer)
 
 @router.message(OfferState.counter_offer)
