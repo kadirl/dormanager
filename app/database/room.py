@@ -19,7 +19,8 @@ class RoomRating(AppModel):
 
 
 class Room(AppModel):
-    number: str
+    number: int
+    rating: float = 5.0
     ratings: List[RoomRating | None] = []
 
 
@@ -45,41 +46,22 @@ class RoomCollection:
 
     @classmethod
     def add_room_rating(cls, number: int, rating: RoomRating):
+        room = cls.get_room_by_number(number)
+        room_rating = room.rating
+        room_ratings_count = max(1, len(room.ratings))
 
-        result = cls.col.find_one({'tg_id': id})
-
-        if result:
-            return User(**result)
-
-    @classmethod
-    def get_all_users(cls):
-        result = cls.col.find()
-
-        return [User(**data) for data in result]
-
-    @classmethod
-    def get_regular_notification_allowed_users(cls):
-        result = cls.col.find({'notification_settings.regular': True})
-
-        return [User(**data) for data in result]
-
-    @classmethod
-    def get_events_notification_allowed_users(cls):
-        result = cls.col.find({'notification_settings.events': True})
-
-        return [User(**data) for data in result]
-
-    @classmethod
-    def get_offers_notification_allowed_users(cls):
-        result = cls.col.find({'notification_settings.offers': True})
-
-        return [User(**data) for data in result]
-
-    @classmethod
-    def update_notification_settings_by_tg_id(cls, tg_id: str, settings: UserNotifications):
         cls.col.update_one(
-            {'tg_id': tg_id},
-            {'$set':{
-                'notification_settings': settings.dict()
-            }}
+            {'number': number},
+            {
+                '$set': {
+                    'rating': (room_rating * room_ratings_count + rating.rating) / (room_ratings_count + 1)
+                },
+                '$push': {'ratings': rating.dict()}
+            }
         )
+
+    @classmethod
+    def get_all_rooms(cls):
+        result = cls.col.find().sort('rating', -1)
+
+        return [Room(**data) for data in result]
