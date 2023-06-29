@@ -8,7 +8,6 @@ env_dir = os.path.abspath(os.path.join(parent_dir, '.env'))
 
 class Config(BaseSettings):
     BOT_TOKEN: SecretStr
-    API_TOKEN: SecretStr
     MONGO_USERNAME: SecretStr
     MONGO_PASSWORD: SecretStr
     MONGO_CLUSTER: SecretStr

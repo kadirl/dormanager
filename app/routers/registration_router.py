@@ -14,11 +14,11 @@ from app.utils import pop_history, append_history, clear_history
 
 router = Router()
 
-@router.message(Command('reg'))
-@router.message(MainState.new_user, F.text == 'Хочу вступить!')
-async def reg_start_handler(message: types.Message, state: FSMContext):
-    await message.answer('{CITY REQUEST}?', reply_markup=registration.get_cities(country='kazakhstan'))
-    await state.set_state(RegistrationState.city)
+# @router.message(Command('reg'))
+# @router.message(MainState.new_user, F.text == 'Хочу вступить!')
+# async def reg_start_handler(message: types.Message, state: FSMContext):
+#     await message.answer('{CITY REQUEST}?', reply_markup=registration.get_cities(country='kazakhstan'))
+#     await state.set_state(RegistrationState.city)
 
 
 # @router.message(RegistrationState.city, F.text == '{NO CITY}')

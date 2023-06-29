@@ -13,6 +13,3 @@ if __name__ == '__main__':
     dp.include_router(main_router.router)
     dp.include_router(registration_router.router)
     asyncio.get_event_loop().run_until_complete(main())
-
-    # print(type(main_router.router))
-    # dp.include_router(routers)

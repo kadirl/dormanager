@@ -6,3 +6,10 @@ new_user = ReplyKeyboardMarkup(
         [KeyboardButton(text='Давай!')]
     ]
 )
+
+registered_user = ReplyKeyboardMarkup(
+    resize_keyboard=True,
+    keyboard=[
+        [KeyboardButton(text='{PLACEHOLDER}')]
+    ]
+)

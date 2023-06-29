@@ -4,7 +4,7 @@ from aiogram.filters.command import Command, CommandObject
 from aiogram.fsm.context import FSMContext
 from aiogram.types import ReplyKeyboardRemove, InlineKeyboardButton, InlineKeyboardMarkup
 
-from app.database.user import User, VolunteerCollection
+from app.database.user import User, UserCollection
 from app.states import MainState
 from app.keyboards import main_menu
 from app.utils import clear_history, append_history, pop_history
@@ -29,12 +29,12 @@ async def cmd_start(message: types.Message, state: FSMContext, command: CommandO
     await clear_history(state)
 
     id = command.args
-    volunteer = None
+    user = None
 
     if bson.ObjectId.is_valid(id):
-        volunteer = VolunteerCollection.get_volunteer_by_id(id)
+        user = UserCollection.get_user_by_id(id)
 
-    if volunteer is None:
+    if user is None:
         await append_history(cmd_start, state)
         await state.set_state(MainState.new_user)
         await message.answer(
@@ -44,25 +44,12 @@ async def cmd_start(message: types.Message, state: FSMContext, command: CommandO
     else:
         await state.set_state(MainState.registered_user)
         await message.answer(
-            f'hello {volunteer.first_name}',
+            f'Привет, {user.name}! 👋\n Чего желаете?',
             reply_markup=main_menu.registered_user
         )
 
 
-@router.message(MainState.new_user, F.text == 'Хочу узнать больше')
-async def learn_more(message: types.Message):
-    await message.answer(
-        '{ABOUT TEXT HERE}',
-        reply_markup=InlineKeyboardMarkup(inline_keyboard=[
-            [InlineKeyboardButton(
-                text='Наш инстаграм',
-                url='https://www.instagram.com/newwave_club/'
-            )]
-        ])
-    )
-
-
-@router.message(MainState.new_user, F.text != 'Хочу вступить!')
+@router.message(MainState.new_user)
 async def unknown_handler(message: types.Message):
     await message.answer(
         '{UNKNOWN HANDLER}'
@@ -72,6 +59,6 @@ async def unknown_handler(message: types.Message):
 async def registered_user(message: types.Message, state: FSMContext):
     await clear_history(state)
     await message.answer(
-        'I am old user handler I am calling learn more',
+        '{REGISTERED USER}',
         reply_markup=ReplyKeyboardRemove()
     )
