@@ -3,6 +3,7 @@ from aiogram import Router, types, F
 from aiogram.filters.command import Command, CommandObject
 from aiogram.fsm.context import FSMContext
 from aiogram.types import ReplyKeyboardRemove, InlineKeyboardButton, InlineKeyboardMarkup
+from aiogram.enums.parse_mode import ParseMode
 
 from app.database.user import User, UserCollection
 from app.database.event import Event, EventsCollection
@@ -20,34 +21,10 @@ async def show_events(message: types.Message, state: FSMContext):
 
     events = EventsCollection.get_upcoming_events()
     for event in events:
+        host = UserCollection.get_user_by_id(event.host)
+
         await message.answer(
-            f'{event.name}\n',
-            reply_markup=notify_menu.get_cancel(),
-            parse_mode=types.P
+            f'<b>{event.name}</b>\n{event.description}\nВремя:{event.time}\nМесто:{event.place}\nХост:{host.name}',
+            parse_mode=ParseMode.HTML
         )
-
-
-@router.message(NotificationState.content, F.text == 'Отменить')
-async def send_notification(message: types.Message, state: FSMContext):
-    await message.answer('Отменяем объявление 👀')
-    await state.set_state(MainState.registered_user)
-    await clear_history(state)
-
-
-@router.message(NotificationState.content)
-async def send_notification(message: types.Message, state: FSMContext):
-    sender = UserCollection.get_user_by_tg_id(message.from_user.id)
-    text = f'{sender.name} из комнаты {sender.room} хочет кое-чем со всеми поделиться:\n\n"{message.text}"'
-
-    users = UserCollection.get_regular_notification_allowed_users()
-
-    for user in users:
-        if user.tg_id == str(message.from_user.id):
-            await message.answer(f'Объявление отправлено успешно!\nЕго получили {len(users)} жителей общежития.')
-            await message.answer('Чего вы желаете?', reply_markup=main_menu.get_registered_user())
-            continue
-        await bot.send_message(user.chat_id, text=text)
-
-    await state.set_state(MainState.registered_user)
-    await clear_history(state)
 

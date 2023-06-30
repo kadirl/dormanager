@@ -20,9 +20,10 @@ class UserNotifications(AppModel):
 
 
 class User(AppModel):
-    id: ObjectId = Field(alias="_id")
+    id: ObjectId = Field(alias="_id", default=ObjectId())
     tg_id: str
     chat_id: str
+    username: str
     name: str
     room: int
     notification_settings: UserNotifications = UserNotifications()

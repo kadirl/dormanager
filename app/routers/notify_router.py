@@ -26,6 +26,7 @@ async def create_notification(message: types.Message, state: FSMContext):
 @router.message(NotificationState.content, F.text == 'Отменить')
 async def send_notification(message: types.Message, state: FSMContext):
     await message.answer('Отменяем объявление 👀')
+    await message.answer('Чего вы желаете?', reply_markup=main_menu.get_registered_user())
     await state.set_state(MainState.registered_user)
     await clear_history(state)
 

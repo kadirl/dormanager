@@ -13,7 +13,6 @@ from app.database import database
 
 
 class Event(AppModel):
-    id: ObjectId = Field(alias="_id")
     name: str
     description: str
     place: str
