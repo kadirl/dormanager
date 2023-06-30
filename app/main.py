@@ -2,6 +2,7 @@ import asyncio
 import logging
 
 from aiogram import Bot
+from aiogram.types import BotCommand
 
 from app import bot, dp
 from app.routers import (
@@ -16,15 +17,22 @@ from app.routers import (
 
 logging.basicConfig(level=logging.INFO)
 
+async def setup_bot_commands():
+    bot_commands = [
+        BotCommand(command="/rating", description="Get rating"),
+        BotCommand(command="/get_my_rating", description="Get all ratings of my room")
+    ]
+    await bot.set_my_commands(bot_commands)
+
 
 async def start_bot(bot: Bot):
-    await bot.send_message(406340756, 'BOT STARTED')
-    await bot.send_message(529158582, 'BOT STARTED')
+    # await bot.send_message(406340756, 'BOT STARTED')
+    # await bot.send_message(529158582, 'BOT STARTED')
 
 
 async def stop_bot(bot: Bot):
-    await bot.send_message(406340756, 'BOT STOPED')
-    await bot.send_message(529158582, 'BOT STOPED')
+    # await bot.send_message(406340756, 'BOT STOPED')
+    # await bot.send_message(529158582, 'BOT STOPED')
 
 
 async def main():
