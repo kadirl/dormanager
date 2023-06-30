@@ -1,10 +1,11 @@
 from __future__ import annotations
 
 from pymongo.database import Database, Collection
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from pydantic.types import Optional
 from bson.objectid import ObjectId
 from typing import List
+import uuid
 
 from datetime import datetime, timedelta, date
 
@@ -19,7 +20,7 @@ class UserNotifications(AppModel):
 
 
 class User(AppModel):
-    _id: ObjectId = ObjectId()
+    id: ObjectId = Field(alias="_id")
     tg_id: str
     chat_id: str
     name: str
