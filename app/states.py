@@ -28,3 +28,10 @@ class RatingState(StatesGroup):
     number = State()
     rate = State()
     text = State()
+
+
+class EventsStat(StatesGroup):
+    name = State()
+    desc = State()
+    place = State()
+    date = State()

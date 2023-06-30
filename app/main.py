@@ -11,7 +11,8 @@ from app.routers import (
     offer_router,
     settings_router,
     rating_router,
-    events_router
+    events_router,
+    faq_router
 )
 
 logging.basicConfig(level=logging.INFO)
@@ -40,4 +41,5 @@ if __name__ == '__main__':
     dp.include_router(rating_router.router)
     dp.include_router(settings_router.router)
     dp.include_router(events_router.router)
+    dp.include_router(faq_router.router)
     asyncio.get_event_loop().run_until_complete(main())

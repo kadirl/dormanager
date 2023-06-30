@@ -42,7 +42,7 @@ async def cmd_start(message: types.Message, state: FSMContext, command: CommandO
     else:
         await state.set_state(MainState.registered_user)
         await message.answer(
-            f'Привет, {user.name}! 👋\n Чего желаете?',
+            f'Привет, {user.name}! 👋\nЧего желаете?',
             reply_markup=main_menu.get_registered_user()
         )
 
@@ -50,7 +50,7 @@ async def cmd_start(message: types.Message, state: FSMContext, command: CommandO
 @router.message(MainState.new_user, F.text != 'Давай!')
 async def unknown_handler(message: types.Message):
     await message.answer(
-        '{UNKNOWN HANDLER}'
+        'Извините, я вас не понимаю :('
     )
 
 
@@ -59,7 +59,9 @@ async def registered_user(message: types.Message, state: FSMContext):
     await clear_history(state)
     await append_history(registered_user, state)
 
+    user = UserCollection.get_user_by_tg_id(message.from_user.id)
+
     await message.answer(
-        '{REGISTERED USER}',
+        f'Привет, {user.name}! Я не понимаю тебя. Тыкни лучше на кнопки ниже :)',
         reply_markup=main_menu.get_registered_user()
     )
