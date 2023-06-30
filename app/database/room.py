@@ -42,8 +42,10 @@ class RoomCollection:
     def get_room_by_number(cls, number: int):
 
         result = cls.col.find_one({'number': number})
-
-        return Room(**result)
+        if result:
+            return Room(**result)
+        else:
+            return None
 
     @classmethod
     def add_room_rating(cls, number: int, rating: RoomRating):

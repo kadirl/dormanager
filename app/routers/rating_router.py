@@ -5,6 +5,7 @@ from aiogram.filters.state import StateFilter
 from aiogram.fsm.context import FSMContext
 from aiogram.types import ReplyKeyboardRemove
 
+from app import bot
 from app.states import MainState, RatingState
 from app.keyboards import main_menu
 from app.database.user import User, UserCollection
@@ -53,7 +54,6 @@ async def text_handler(message: types.Message, state: FSMContext):
     text = message.text
     sender = UserCollection.get_user_by_tg_id(message.from_user.id)
     data = (await state.get_data())
-    print(data)
     await message.answer('Ваш отзыв сохранен')
 
     if RoomCollection.get_room_by_number(data['number']) is None:
@@ -72,6 +72,11 @@ async def text_handler(message: types.Message, state: FSMContext):
         )
     )
 
+    # функция которая предупреждает о новом отзыве
+    users = UserCollection.get_users_by_room_number(data['number'])
+    final_res = f"<b>У вашей комнаты новый отзыв:</b>\n'{text}'\n{str(data['rate'])}/5"
+    for user in users:
+        await bot.send_message(chat_id=user.chat_id, text=final_res, parse_mode="HTML")
 
     await state.set_state(MainState.registered_user)
     await clear_history(state)
@@ -79,17 +84,33 @@ async def text_handler(message: types.Message, state: FSMContext):
 
 
 @router.message(Command('rating'))
-async def text_handler(message: types.Message):
+async def list_rating_handler(message: types.Message, state: FSMContext):
     rooms = RoomCollection.get_all_rooms()
     rating = ''
     for count, room in enumerate(rooms):
         if count+1 == 1:
-            rating += '🥇' + 'Комната №' + str(room.number) + ': ' + str(room.rating) + '/5.0\n'
+            rating += '🥇' + 'Комната №' + str(room.number) + ': ' + str(round(room.rating, 1)) + '/5.0\n'
         elif count+1 == 2:
-            rating += '🥈' + 'Комната №' + str(room.number) + ': ' + str(room.rating) + '/5.0\n'
+            rating += '🥈' + 'Комната №' + str(room.number) + ': ' + str(round(room.rating, 1)) + '/5.0\n'
         elif count + 1 == 3:
-            rating += '🥉' + 'Комната №' + str(room.number) + ': ' + str(room.rating) + '/5.0\n'
+            rating += '🥉' + 'Комната №' + str(room.number) + ': ' + str(round(room.rating, 1)) + '/5.0\n'
         else:
-            rating += str(count+1) + '.' + 'Комната №' + str(room.number) + ': ' + str(room.rating) + '/5.0\n'
+            rating += str(count+1) + '.' + 'Комната №' + str(room.number) + ': ' + str(round(room.rating, 1)) + '/5.0\n'
 
     await message.answer(rating)
+    await state.set_state(MainState.registered_user)
+    await clear_history(state)
+
+@router.message(Command('get_my_ratings'))
+async def get_ratings_handler(message: types.Message, state: FSMContext):
+    room_number = UserCollection.get_user_by_tg_id(message.from_user.id).room
+    rooms = RoomCollection.get_room_by_number(room_number)
+    final_res = ''
+
+    for counter, room in enumerate(rooms.ratings):
+        final_res += str(counter+1) + '. ' + str(room.rating) + '/5\n' + room.text + '\n\n'
+
+    await message.answer(final_res)
+    await state.set_state(MainState.registered_user)
+    await clear_history(state)
+
