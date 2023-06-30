@@ -16,6 +16,7 @@ router = Router()
 
 
 @router.message(Command('rate'))
+@router.message(MainState.registered_user, F.text == 'Оценить соседей 👍👎')
 async def number_handler(message: types.Message, state: FSMContext):
     await message.answer('Введите номер комнаты')
     await state.set_state(RatingState.number)
@@ -67,7 +68,7 @@ async def text_handler(message: types.Message, state: FSMContext):
         RoomRating(
             rating=data['rate'],
             text=text,
-            sender_id=sender._id
+            sender_id=sender.id
         )
     )
 

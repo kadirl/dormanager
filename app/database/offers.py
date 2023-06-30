@@ -45,6 +45,6 @@ class OfferCollection:
         if isinstance(id, str):
             id = ObjectId(id)
 
-        result = cls.col.find_one({'issuer_id': id})
+        result = cls.col.find_one({'issuer_id': id}, sort=[('_id', 1)])
 
         return Offer(**result)

@@ -20,9 +20,10 @@ class UserNotifications(AppModel):
 
 
 class User(AppModel):
-    id: ObjectId = Field(alias="_id")
+    id: ObjectId = Field(alias="_id", default=ObjectId())
     tg_id: str
     chat_id: str
+    username: str
     name: str
     room: int
     notification_settings: UserNotifications = UserNotifications()
@@ -93,3 +94,11 @@ class UserCollection:
                 'notification_settings': settings.dict()
             }}
         )
+
+    @classmethod
+    def get_users_by_room_number(cls, number: int):
+        result = cls.col.find(
+            {'room': number}
+        )
+
+        return [User(**data) for data in result]

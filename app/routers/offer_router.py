@@ -37,6 +37,14 @@ async def send_offer(message: types.Message, state: FSMContext):
     users = UserCollection.get_offers_notification_allowed_users()
     myself = UserCollection.get_user_by_tg_id(message.from_user.id)
 
+    offer_id = OfferCollection.create_offer(
+        Offer(
+            issuer_id=UserCollection.get_user_by_tg_id(message.from_user.id).id,
+            text=text
+        )
+    )
+    print(offer_id)
+
     for user in users:
         if user.tg_id == str(message.from_user.id):
             await message.answer('Ваш обмен отправлен другим постояльцам общежития :)\nВ скором времени, вам должны будут ответить ваши любимые соседи ❤️')
@@ -44,25 +52,20 @@ async def send_offer(message: types.Message, state: FSMContext):
         await bot.send_message(
             chat_id=user.chat_id,
             text=f'{myself.name} из комнаты {myself.room} предлагает:\n\n"{text}"',
-            reply_markup=offer_menu.reply_to_offer())
+            reply_markup=offer_menu.reply_to_offer(offer_id))
 
     await state.set_state(MainState.registered_user)
     await message.answer('Чего вы желаете?', reply_markup=main_menu.get_registered_user())
 
-    OfferCollection.create_offer(
-        Offer(
-            issuer_id=UserCollection.get_user_by_tg_id(message.from_user.id).id,
-            text=text
-        )
-    )
 
 
-@router.callback_query(Text("interested"))
+
+@router.callback_query(Text(startswith="interested"))
 async def counter_offer(callback: types.CallbackQuery, state: FSMContext):
     asking_user = UserCollection.get_user_by_tg_id(callback.from_user.id)
     print(asking_user)
 
-    offer = OfferCollection.get_offer_by_issuer_id(asking_user.id)
+    offer = OfferCollection.get_offer_by_id(callback.data.split(':')[1])
     print(offer)
 
     issuer_user = UserCollection.get_user_by_id(offer.issuer_id)
@@ -73,7 +76,7 @@ async def counter_offer(callback: types.CallbackQuery, state: FSMContext):
         reply_markup=InlineKeyboardMarkup(inline_keyboard=[
             [InlineKeyboardButton(
                 text='Свяазаться',
-                url=f't.me/{callback.from_user.username}'
+                url=f't.me/{issuer_user.username}'
             )]
         ])
     )

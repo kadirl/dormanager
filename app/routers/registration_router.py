@@ -17,7 +17,7 @@ router = Router()
 @router.message(Command('reg'))
 @router.message(MainState.new_user, F.text == 'Давай!')
 async def reg_start_handler(message: types.Message, state: FSMContext):
-    await message.answer('{NAME REQUEST}?', reply_markup=ReplyKeyboardRemove())
+    await message.answer('Как вас зовут? Напишите, пожалуйста, ваше имя и фамилию кириллицей', reply_markup=ReplyKeyboardRemove())
     await state.set_state(RegistrationState.name)
 
 
@@ -25,26 +25,25 @@ async def reg_start_handler(message: types.Message, state: FSMContext):
 async def name_handler(message: types.Message, state: FSMContext):
     name = message.text
     await state.update_data(name=name)
-    await message.answer(f'{name} ENTER ROOM')
+    await message.answer(f'Приятно познакомиться, {name}! В какой комнате вы живете?')
     await state.set_state(RegistrationState.room)
 
 
 @router.message(RegistrationState.name)
 async def invalid_name(message: types.Message, state: FSMContext):
-    await message.answer('{INVALID NAME}')
+    await message.answer('Извините, но такое имя у нас нельзя :(\nНапишите еще раз')
 
 
 @router.message(RegistrationState.room, RoomFilter())
 async def room_handler(message: types.Message, state: FSMContext):
     room = int(message.text)
     await state.update_data(room=room)
-    await message.answer(message.text + '{ROOM COMPLETE}', reply_markup=main_menu.get_registered_user())
+    await message.answer(f'Юху! Мы закончили нашу коротенькую регистрацию. Теперь вы член нашей семьи!', reply_markup=main_menu.get_registered_user())
     await state.set_state(MainState.registered_user)
-    await clear_history(state)
 
     await state.update_data(tg_id=message.from_user.id)
     await state.update_data(chat_id=message.chat.id)
-
+    await state.update_data(username=message.from_user.username)
 
     UserCollection.create_user(
         User(
@@ -52,7 +51,9 @@ async def room_handler(message: types.Message, state: FSMContext):
         )
     )
 
+    await clear_history(state)
+
 
 @router.message(RegistrationState.room)
 async def invalid_room_handler(message: types.Message, state: FSMContext):
-    await message.answer('{INVALID ROOM}')
+    await message.answer('Номером комтаны может быть любое целое число от 1 до 200. У вас оно, кажется, не такое. Попробуйте еще раз :)')
