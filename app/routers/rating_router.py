@@ -17,7 +17,7 @@ router = Router()
 
 @router.message(Command('rate'))
 async def number_handler(message: types.Message, state: FSMContext):
-    await message.answer('Enter room number')
+    await message.answer('Введите номер комнаты')
     await state.set_state(RatingState.number)
 
 
@@ -25,8 +25,7 @@ async def number_handler(message: types.Message, state: FSMContext):
 async def name_handler(message: types.Message, state: FSMContext):
     number = int(message.text)
     await state.update_data(number=number)
-    await message.answer('Success')
-    await message.answer('Rate room')
+    await message.answer('Дайте оценку комнате')
     await state.set_state(RatingState.rate)
 
 
@@ -39,7 +38,6 @@ async def invalid_name(message: types.Message, state: FSMContext):
 async def rate_handler(message: types.Message, state: FSMContext):
     rate = int(message.text)
     await state.update_data(rate=rate)
-    await message.answer('Success')
     await message.answer('Напишите отзыв')
     await state.set_state(RatingState.text)
 
@@ -55,7 +53,7 @@ async def text_handler(message: types.Message, state: FSMContext):
     sender = UserCollection.get_user_by_tg_id(message.from_user.id)
     data = (await state.get_data())
     print(data)
-    await message.answer('Success')
+    await message.answer('Ваш отзыв сохранен')
 
     if RoomCollection.get_room_by_number(data['number']) is None:
         RoomCollection.create_room(
