@@ -93,3 +93,11 @@ class UserCollection:
                 'notification_settings': settings.dict()
             }}
         )
+
+    @classmethod
+    def get_users_by_room_number(cls, number: int):
+        result = cls.col.find(
+            {'room': number}
+        )
+
+        return [User(**data) for data in result]
