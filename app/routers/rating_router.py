@@ -5,6 +5,7 @@ from aiogram.filters.state import StateFilter
 from aiogram.fsm.context import FSMContext
 from aiogram.types import ReplyKeyboardRemove
 
+from app import bot
 from app.states import MainState, RatingState
 from app.keyboards import main_menu
 from app.database.user import User, UserCollection
@@ -53,7 +54,6 @@ async def text_handler(message: types.Message, state: FSMContext):
     text = message.text
     sender = UserCollection.get_user_by_tg_id(message.from_user.id)
     data = (await state.get_data())
-    print(data)
     await message.answer('Ваш отзыв сохранен')
 
     if RoomCollection.get_room_by_number(data['number']) is None:
@@ -71,7 +71,10 @@ async def text_handler(message: types.Message, state: FSMContext):
             sender_id=sender.id
         )
     )
-
+    notification = f"У вашей комнаты новый отзыв:\n'{text}'\n{str(data['rate'])}/5"
+    users = UserCollection.get_users_by_room_number(data['number'])
+    for user in users:
+        await bot.send_message(chat_id=user.chat_id, text=notification)
 
     await state.set_state(MainState.registered_user)
     await clear_history(state)
@@ -103,6 +106,3 @@ async def text_handler(message: types.Message):
         final_ratings += str(counter+1) + '. ' + str(rating.rating) + '/5\n' + 'Отзыв: ' + rating.text + '\n\n'
 
     await message.answer(final_ratings)
-    # функция просмотра отзывов своей комнаты
-    # функция уведомлений о новом отзыве
-
