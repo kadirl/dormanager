@@ -19,49 +19,72 @@ router = Router()
 @router.message(MainState.registered_user, F.text == 'Предложить обмен 🍽️')
 async def create_offer(message: types.Message, state: FSMContext):
     await state.set_state(OfferState.offer)
-    await message.answer(text='Чего вы хотите и что можете предложить взамен? 🤔')
+    await message.answer(
+        text='Чего вы хотите и что можете предложить взамен? 🤔',
+        reply_markup=offer_menu.get_cancel()
+    )
+
+
+@router.message(OfferState.offer, F.text == 'Отменить')
+async def send_offer(message: types.Message, state: FSMContext):
+    await state.set_state(MainState.registered_user)
+    await message.answer('Чего вы желаете?', reply_markup=main_menu.get_registered_user())
 
 
 @router.message(OfferState.offer)
 async def send_offer(message: types.Message, state: FSMContext):
     text = message.text
     users = UserCollection.get_offers_notification_allowed_users()
+    myself = UserCollection.get_user_by_tg_id(message.from_user.id)
 
     for user in users:
         if user.tg_id == str(message.from_user.id):
             await message.answer('Ваш обмен отправлен другим постояльцам общежития :)\nВ скором времени, вам должны будут ответить ваши любимые соседи ❤️')
-        await bot.send_message(chat_id=user.chat_id, text=text, reply_markup=offer_menu.reply_to_offer())
+            continue
+        await bot.send_message(
+            chat_id=user.chat_id,
+            text=f'{myself.name} из комнаты {myself.room} предлагает:\n\n"{text}"',
+            reply_markup=offer_menu.reply_to_offer())
 
     await state.set_state(MainState.registered_user)
     await message.answer('Чего вы желаете?', reply_markup=main_menu.get_registered_user())
 
     OfferCollection.create_offer(
         Offer(
-            issuer_id=UserCollection.get_user_by_tg_id(message.from_user.id)._id,
+            issuer_id=UserCollection.get_user_by_tg_id(message.from_user.id).id,
             text=text
         )
     )
 
 
-@router.callback_query(Text("counter_offer"))
+@router.callback_query(Text("interested"))
 async def counter_offer(callback: types.CallbackQuery, state: FSMContext):
-    user = UserCollection.get_user_by_tg_id(callback.from_user.id)
-    offer = OfferCollection.get_offer_by_issuer_id(user._id)
+    asking_user = UserCollection.get_user_by_tg_id(callback.from_user.id)
+    print(asking_user)
 
-    await state.set_state(OfferState.counter_offer)
+    offer = OfferCollection.get_offer_by_issuer_id(asking_user.id)
+    print(offer)
+
+    issuer_user = UserCollection.get_user_by_id(offer.issuer_id)
+    print(issuer_user)
+
     await callback.message.answer(
-        text=f'{user.name} заинтересован в вашем предложении:\n\n"{offer.text}"'
+        text=f'Вы можете связаться с {issuer_user.name} нажав на кнопку ниже"',
+        reply_markup=InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(
+                text='Свяазаться',
+                url=f't.me/{callback.from_user.username}'
+            )]
+        ])
     )
 
-
-# @router.message(OfferState.counter_offer)
-# async def send_counter_offer(message: types.Message, state: FSMContext):
-#     text = message.text
-#     chat_id_of_offer_sender = 529158582
-#     await bot.send_message(chat_id=chat_id_of_offer_sender, text=text, reply_markup=offer_menu.reply_to_counter_offer())
-#
-
-# @router.callback_query(Text("another_offer"))
-# async def send_random_value(callback: types.CallbackQuery, state: FSMContext):
-#     await state.set_state(OfferState.offer)
-#     await callback.message.answer(text='{OFFER REQUEST}')
+    await bot.send_message(
+        issuer_user.tg_id,
+        text=f'{asking_user.name} заинтересован в вашем предложении обмена:\n\n"{offer.text}"',
+        reply_markup=InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(
+                text='Свяазаться',
+                url=f't.me/{callback.from_user.username}'
+            )]
+        ])
+    )

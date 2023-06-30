@@ -8,19 +8,14 @@ def reply_to_offer():
 
     builder.add(InlineKeyboardButton(
         text="Интересно",
-        callback_data="accept")
+        callback_data="interested")
     )
 
     return builder.as_markup()
 
-def issuer_reply():
-    builder = InlineKeyboardBuilder()
-
-    builder.add(InlineKeyboardButton(
-        text="Интересно",
-        callback_data="accept")
+def get_cancel():
+    return ReplyKeyboardMarkup(
+        keyboard=[
+            [KeyboardButton(text='Отменить')]
+        ]
     )
-
-    return builder.as_markup()
-
-
