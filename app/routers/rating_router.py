@@ -92,3 +92,16 @@ async def text_handler(message: types.Message):
             rating += str(count+1) + '.' + 'Комната №' + str(room.number) + ': ' + str(room.rating) + '/5.0\n'
 
     await message.answer(rating)
+
+@router.message(Command('get_my_rating'))
+async def text_handler(message: types.Message):
+    room_number = UserCollection.get_user_by_tg_id(message.chat.id).room
+    my_rating = RoomCollection.get_room_by_number(room_number)
+    final_ratings = ''
+    for counter, rating in enumerate(my_rating.ratings):
+        final_ratings += str(counter+1) + '. ' + str(rating.rating) + '/5\n' + 'Отзыв: ' + rating.text + '\n\n'
+
+    await message.answer(final_ratings)
+    # функция просмотра отзывов своей комнаты
+    # функция уведомлений о новом отзыве
+
